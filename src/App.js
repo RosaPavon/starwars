@@ -5,18 +5,33 @@ import './App.css';
 function App() {
   
   const [loading, setLoading] =useState(false)
-  const [url, setUrl]=useState("https://swapi.dev/api/planets/")
+  const [urlls, setUrlls]=useState("https://swapi.dev/api/planets/")
   const [data, setData]=useState([])
   const [residentes, setResidentes]=useState('')
   const [data2, setData2]=useState([])
   
+  function Planeta(props){
+    const [personajes, setPersonajes]= useState([])
+    useEffect(()=>{
+      Promise.all(props.urls.map((url)=>fetch(url)))
+      .then((respuesta) =>Promise.all(respuesta.map((res)=>res.json())))
+      .then((datos)=>{
+        setPersonajes(datos)
+      })
+    },[setData2]);
+
+    const personajeHTML = personajes.map((personaje)=>{
+      return <li>{personaje.name}</li>
+    })
+    return <ul>{personajeHTML}</ul>
+  }
 
 
   useEffect(()=>{
     setLoading(true)
-    fetch(url).then(res => res.json()).then((datos)=>setData(datos.results))
+    fetch(urlls).then(res => res.json()).then((datos)=>setData(datos.results))
     setLoading(false)
-  },[url])
+  },[urlls])
 
   useEffect(()=>{
     setLoading(true)
@@ -43,6 +58,8 @@ function App() {
        return <li key={data.name}>{data.residents}</li>}
        })}
       </ul>
+
+      <Planeta urls={data2}/>
       
 
     </> 
